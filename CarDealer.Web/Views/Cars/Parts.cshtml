@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CarWithPartsModel>
+
+@{
+    ViewData["Title"] = "Cars with parts";
+}
+
+<h1>All cars with parts</h1>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Distance, '000 km</th>
+            <th>Parts</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-action="AllByMake" asp-route-make="@car.Make">@car.Make</a>
+                </td>
+                <td>@car.Model</td>
+                <td>@((car.TravelledDistance / 1000).ToNumber())</td>
+                <td>
+                    <ul>
+                        @foreach (var part in car.Parts)
+                        {
+                            <li>@part.Name = @(part.Price.ToCurrency())</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

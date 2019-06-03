@@ -1,6 +1,8 @@
 ﻿namespace CarDealer.Web
 {
     using CarDealer.Data;
+    using CarDealer.Services;
+    using CarDealer.Services.Implementations;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -31,8 +33,8 @@
             });
 
             services
-                .AddDbContext<CarDealerDbContext>(options =>
-                options.UseSqlServer(
+                .AddDbContext<CarDealerDbContext>(options
+                => options.UseSqlServer(
                     this.Configuration.GetConnectionString("DefaultConnection")));
 
             services
@@ -45,6 +47,14 @@
                 })
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<CarDealerDbContext>();
+
+            // Services
+            services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<ICarService, CarService>();
+            services.AddTransient<ISupplierService, SupplierService>();
+            services.AddTransient<ISaleService, SaleService>();
+
+            services.AddRouting(options => options.LowercaseUrls = true);
 
             services
                 .AddMvc()

@@ -1,0 +1,56 @@
+﻿@model CustomersAllModel
+
+@{
+    ViewData["Title"] = "All customers";
+}
+
+<h1>
+    All customers
+    <a class="btn btn-lg btn-outline-primary" asp-action="Create">
+        Add customer
+    </a>
+</h1>
+
+<h3>
+    In @Model.OrderDirection.ToString().ToLower()
+
+    @if (Model.OrderDirection == OrderDirection.Descending)
+    {
+        <a asp-action="All">order</a>
+    }
+    else
+    {
+        <a asp-action="All" asp-route-order="descending">order</a>
+    }
+</h3>
+
+<table class="table table-hover">
+    <thead>
+        <tr class="text-capitalize">
+            <th>Name</th>
+            <th>Birth date</th>
+            <th>Is young driver</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model.Customers)
+        {
+            <tr>
+                <td>
+                    <a asp-action="TotalSales" asp-route-id=@customer.Id>
+                        @customer.Name
+                    </a>
+                </td>
+                <td>@customer.BirthDate.ToShortDateString()</td>
+                <td>@(customer.IsYoungDriver ? "Yes" : "No")</td>
+                <td>
+                    <a class="btn btn-block btn-outline-warning"
+                       asp-action="Edit" asp-route-id=@customer.Id>
+                        Edit
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,36 @@
+﻿@model CarsByMakeModel
+
+@{
+    ViewData["Title"] = "Cars by make";
+}
+
+<h1>@Model.Make.ToUpper() cars</h1>
+
+@if (!Model.Cars.Any())
+{
+    <h3>No cars</h3>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Travelled distance, km</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in Model.Cars)
+            {
+                <tr>
+                    <td>
+                        <a asp-route-make="@car.Make">@car.Make</a>
+                    </td>
+                    <td>@car.Model</td>
+                    <td>@((car.TravelledDistance / 1000).ToNumber())</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
