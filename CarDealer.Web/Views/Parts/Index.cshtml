@@ -1,0 +1,48 @@
+﻿@model PartPageListingModel
+
+@{
+    ViewData["Title"] = "All parts";
+    const string create = nameof(PartsController.Create);
+    const string delete = nameof(PartsController.Delete);
+    const string edit = nameof(PartsController.Edit);
+    const string details = nameof(PartsController.Details);
+}
+
+<header class="d-flex flex-wrap justify-content-between align-items-center">
+    <h1>
+        All parts
+    </h1>
+    <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add part</a>
+</header>
+
+<partial name="../Shared/_PaginationPartial" model="Model.Pagination" />
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Supplier</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var part in Model.Parts)
+        {
+            <tr>
+                <td>@part.Id</td>
+                <td>@part.Name</td>
+                <td>@part.Supplier</td>
+                <td class="text-right">@part.Quantity.ToNumber()</td>
+                <td class="text-right">@part.Price.ToCurrency()</td>
+                <td class="d-flex justify-content-around">
+                    <a asp-action="@details" asp-route-id="@part.Id" class="btn btn-@CssHelpers.GetColor(details)">@details</a>
+                    <a asp-action="@edit" asp-route-id="@part.Id" class="btn btn-@CssHelpers.GetColor(edit)">@edit</a>
+                    <a asp-action="@delete" asp-route-id="@part.Id" class="btn btn-@CssHelpers.GetColor(delete)">@delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

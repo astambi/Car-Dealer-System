@@ -1,0 +1,68 @@
+﻿@model CarFormModel
+
+@{
+    ViewData["Title"] = "CarForm";
+    const string delete = nameof(CarsController.Delete);
+}
+
+<h1>@Model.Action car</h1>
+
+<div class="row justify-content-start">
+    <div class="col-md-6">
+        <form asp-action=@Model.Action method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Make" class="control-label"></label>
+                @if (Model.Action != delete)
+                {
+                    <input asp-for="Make" class="form-control" />
+                }
+                else
+                {
+                    <input asp-for="Make" class="form-control" readonly />
+                }
+                <span asp-validation-for="Make" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Model" class="control-label"></label>
+                @if (Model.Action != delete)
+                {
+                    <input asp-for="Model" class="form-control" />
+                }
+                else
+                {
+                    <input asp-for="Model" class="form-control" readonly />
+                }
+                <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TravelledDistance" class="control-label"></label>
+                @if (Model.Action != delete)
+                {
+                    <input asp-for="TravelledDistance" class="form-control" min="0" />
+                }
+                else
+                {
+                    <input asp-for="TravelledDistance" class="form-control" readonly />
+                }
+                <span asp-validation-for="TravelledDistance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Parts" class="control-label"></label>
+                @if (Model.Action != delete)
+                {
+                    <select asp-for="Parts" asp-items="Model.PartsSelectList" class="form-control" size="10"></select>
+                }
+                else
+                {
+                    <select asp-for="Parts" asp-items="Model.PartsSelectList" class="form-control" size="10"></select>
+                }
+                <span asp-validation-for="Parts" class="text-danger"></span>
+            </div>
+
+            <partial name="../Shared/_FormSubmitPartial" model="Model.Action" />
+        </form>
+    </div>
+</div>
+
+<a asp-action="@(nameof(CarsController.AllByMake))">Back to List</a>

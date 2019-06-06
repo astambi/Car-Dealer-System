@@ -20,7 +20,7 @@
         {
             <tr>
                 <td>
-                    <a asp-action="AllByMake" asp-route-make="@car.Make">@car.Make</a>
+                    <a asp-action=@nameof(CarsController.AllByMake) asp-route-make="@car.Make">@car.Make</a>
                 </td>
                 <td>@car.Model</td>
                 <td>@((car.TravelledDistance / 1000).ToNumber())</td>

@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Models\Sales\" />
-    <Folder Include="Views\Sales\" />
   </ItemGroup>
 
 </Project>

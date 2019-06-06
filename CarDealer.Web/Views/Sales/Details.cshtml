@@ -1,0 +1,39 @@
+﻿@model SaleModel
+
+@{
+    ViewData["Title"] = "Sale details";
+}
+
+<h1>Details for sale #@Model.Id</h1>
+
+<section class="lead">
+    <article class="row">
+        <h4 class="col-md-4">@Html.DisplayNameFor(model => model.Customer)</h4>
+        <div class="col-auto">@Model.Customer</div>
+    </article>
+    <article class="row">
+        <h5 class="col-md-4">Car @Html.DisplayNameFor(model => model.Make)</h5>
+        <div class="col-auto">@Model.Make</div>
+    </article>
+    <article class="row">
+        <h5 class="col-md-4">Car @Html.DisplayNameFor(model => model.Model)</h5>
+        <div class="col-auto">@Model.Model</div>
+    </article>
+    <article class="row">
+        <h5 class="col-md-4">Car @Html.DisplayNameFor(model => model.TravelledDistance)</h5>
+        <div class="col-auto">@Model.TravelledDistance.ToNumber() km</div>
+    </article>
+    <article class="row">
+        <h5 class="col-md-4">@Html.DisplayNameFor(model => model.Price)</h5>
+        <div class="col-auto">@Model.Price.ToCurrency()</div>
+    </article>
+    <article class="row">
+        <h5 class="col-md-4">@Html.DisplayNameFor(model => model.Discount)</h5>
+        <div class="col-auto">@Model.Discount.ToPercentage()</div>
+    </article>
+    <article class="row border-top font-weight-bold">
+        <h4 class="col-md-4 font-weight-bold">@Html.DisplayNameFor(model => model.NetPrice)</h4>
+        <div class="col-auto">@Model.NetPrice.ToCurrency()</div>
+    </article>
+</section>
+

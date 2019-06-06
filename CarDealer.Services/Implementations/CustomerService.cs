@@ -4,14 +4,13 @@
     using System.Collections.Generic;
     using System.Linq;
     using CarDealer.Data;
+    using CarDealer.Data.Models;
     using CarDealer.Services.Models;
     using CarDealer.Services.Models.Cars;
     using CarDealer.Services.Models.Customers;
 
     public class CustomerService : ICustomerService
     {
-        private const double AdditionalDiscount = 0.05;
-
         private readonly CarDealerDbContext db;
 
         public CustomerService(CarDealerDbContext db)
@@ -51,13 +50,45 @@
         }
 
         public void Create(string name, DateTime birthDate, bool isYoungDriver)
-            => throw new NotImplementedException();
+        {
+            var customer = new Customer
+            {
+                Name = name,
+                BirthDate = birthDate,
+                IsYoungDriver = isYoungDriver
+            };
+
+            this.db.Customers.Add(customer);
+            this.db.SaveChanges();
+        }
 
         public bool Exists(int id)
             => this.db.Customers.Any(c => c.Id == id);
 
         public CustomerModel GetById(int id)
-            => throw new NotImplementedException();
+            => this.db
+            .Customers
+            .Where(c => c.Id == id)
+            .Select(c => new CustomerModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+                BirthDate = c.BirthDate,
+                IsYoungDriver = c.IsYoungDriver
+            })
+            .FirstOrDefault();
+
+        public void Remove(int id)
+        {
+            if (!this.Exists(id))
+            {
+                return;
+            }
+
+            var customer = this.db.Customers.Find(id);
+            this.db.Customers.Remove(customer);
+            this.db.SaveChanges();
+        }
 
         public CustomerTotalSalesModel TotalSalesById(int id)
             => this.db
@@ -70,13 +101,27 @@
                     .Select(s => new CarPriceModel
                     {
                         Price = s.Car.Parts.Sum(p => p.Part.Price),
-                        Discount = s.Discount + (c.IsYoungDriver ? AdditionalDiscount : 0)
+                        Discount = s.Discount
+                            + (c.IsYoungDriver ? ServicesConstants.YoungDriverDiscount : 0)
                     })
                     .ToList()
             })
             .FirstOrDefault();
 
-        public void Update(int id, string name, DateTime birthDate, bool isYoungDriver)
-            => throw new NotImplementedException();
+        public void Update(int id, string name, DateTime birthDate)
+        {
+            var customer = this.db.Customers.Find(id);
+
+            if (customer == null)
+            {
+                return;
+            }
+
+            customer.Name = name;
+            customer.BirthDate = birthDate;
+
+            this.db.Customers.Update(customer);
+            this.db.SaveChanges();
+        }
     }
 }

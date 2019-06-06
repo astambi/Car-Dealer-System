@@ -2,9 +2,17 @@
 
 @{
     ViewData["Title"] = "Cars by make";
+    var create = nameof(CarsController.Create);
+    var delete = nameof(CarsController.Delete);
+    var edit = nameof(CarsController.Edit);
 }
 
-<h1>@Model.Make.ToUpper() cars</h1>
+<header class="d-flex flex-wrap justify-content-between align-items-center">
+    <h1 class="justify-content-between">
+        @Model.Make.ToUpper() cars
+    </h1>
+    <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add car</a>
+</header>
 
 @if (!Model.Cars.Any())
 {
@@ -18,6 +26,7 @@ else
                 <th>Make</th>
                 <th>Model</th>
                 <th>Travelled distance, km</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +38,10 @@ else
                     </td>
                     <td>@car.Model</td>
                     <td>@((car.TravelledDistance / 1000).ToNumber())</td>
+                    <td class="d-flex justify-content-around">
+                        <a asp-action="@edit" asp-route-id="@car.Id" class="btn btn-@CssHelpers.GetColor(edit)">@edit</a>
+                        <a asp-action="@delete" asp-route-id="@car.Id" class="btn btn-@CssHelpers.GetColor(delete)">@delete</a>
+                    </td>
                 </tr>
             }
         </tbody>

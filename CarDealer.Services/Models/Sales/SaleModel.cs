@@ -1,5 +1,6 @@
 ﻿namespace CarDealer.Services.Models.Sales
 {
+    using System.ComponentModel.DataAnnotations;
     using CarDealer.Services.Models.Cars;
 
     public class SaleModel : CarModel
@@ -12,6 +13,7 @@
 
         public double Discount { get; set; }
 
+        [Display(Name = "Net price")]
         public decimal NetPrice => this.Price * (decimal)(1 - this.Discount);
     }
 }

@@ -16,5 +16,18 @@
             string model,
             long travelledDistance,
             IEnumerable<int> selectedPartIds);
+
+        bool Exists(int id);
+
+        CarEditModel GetById(int id);
+
+        void Remove(int id);
+
+        void Update(
+            int id,
+            string make,
+            string model,
+            long travelledDistance,
+            IEnumerable<int> parts);
     }
 }

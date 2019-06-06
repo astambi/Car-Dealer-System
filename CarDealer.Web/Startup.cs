@@ -1,8 +1,7 @@
 ﻿namespace CarDealer.Web
 {
     using CarDealer.Data;
-    using CarDealer.Services;
-    using CarDealer.Services.Implementations;
+    using CarDealer.Web.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -27,7 +26,6 @@
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
@@ -48,11 +46,7 @@
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<CarDealerDbContext>();
 
-            // Services
-            services.AddTransient<ICustomerService, CustomerService>();
-            services.AddTransient<ICarService, CarService>();
-            services.AddTransient<ISupplierService, SupplierService>();
-            services.AddTransient<ISaleService, SaleService>();
+            services.AddDomainServices(); // register services with reflexion
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
@@ -72,7 +66,6 @@
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 

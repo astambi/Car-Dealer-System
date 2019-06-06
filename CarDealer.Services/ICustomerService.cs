@@ -7,18 +7,20 @@
 
     public interface ICustomerService
     {
-        IEnumerable<CustomerModel> AllOrdered(OrderDirection order);
-
         //IEnumerable<CustomerBasicModel> AllBasic();
 
-        CustomerTotalSalesModel TotalSalesById(int id);
+        IEnumerable<CustomerModel> AllOrdered(OrderDirection order);
 
         void Create(string name, DateTime birthDate, bool isYoungDriver);
 
+        bool Exists(int id);
+
         CustomerModel GetById(int id);
 
-        void Update(int id, string name, DateTime birthDate, bool isYoungDriver);
+        void Remove(int id);
 
-        bool Exists(int id);
+        CustomerTotalSalesModel TotalSalesById(int id);
+
+        void Update(int id, string name, DateTime birthDate);
     }
 }

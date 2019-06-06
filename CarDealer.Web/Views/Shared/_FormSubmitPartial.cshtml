@@ -1,0 +1,6 @@
+﻿@model string
+@*Action name*@
+
+<div class="form-group">
+    <input type="submit" value="@Model" class="btn btn-block btn-@(CssHelpers.GetColor(Model))" />
+</div>

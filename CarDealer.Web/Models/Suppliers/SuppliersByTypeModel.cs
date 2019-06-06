@@ -7,6 +7,6 @@
     {
         public string Type { get; set; }
 
-        public IEnumerable<SupplierModel> Suppliers { get; set; }
+        public IEnumerable<SupplierListingModel> Suppliers { get; set; }
     }
 }

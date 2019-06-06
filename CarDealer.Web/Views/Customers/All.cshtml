@@ -2,25 +2,29 @@
 
 @{
     ViewData["Title"] = "All customers";
+    var all = nameof(CustomersController.All);
+    var create = nameof(CustomersController.Create);
+    var edit = nameof(CustomersController.Edit);
+    var delete = nameof(CustomersController.Delete);
+    var totalSales = nameof(CustomersController.TotalSales);
 }
 
-<h1>
-    All customers
-    <a class="btn btn-lg btn-outline-primary" asp-action="Create">
-        Add customer
-    </a>
-</h1>
+<header class="d-flex flex-wrap justify-content-between align-items-center">
+    <h1 class="justify-content-between">
+        All customers
+    </h1>
+    <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add customer</a>
+</header>
 
 <h3>
     In @Model.OrderDirection.ToString().ToLower()
-
     @if (Model.OrderDirection == OrderDirection.Descending)
     {
-        <a asp-action="All">order</a>
+        <a asp-action=@all>order</a>
     }
     else
     {
-        <a asp-action="All" asp-route-order="descending">order</a>
+        <a asp-action=@all asp-route-order="descending">order</a>
     }
 </h3>
 
@@ -38,17 +42,13 @@
         {
             <tr>
                 <td>
-                    <a asp-action="TotalSales" asp-route-id=@customer.Id>
-                        @customer.Name
-                    </a>
+                    <a asp-action=@totalSales asp-route-id=@customer.Id>@customer.Name</a>
                 </td>
                 <td>@customer.BirthDate.ToShortDateString()</td>
                 <td>@(customer.IsYoungDriver ? "Yes" : "No")</td>
-                <td>
-                    <a class="btn btn-block btn-outline-warning"
-                       asp-action="Edit" asp-route-id=@customer.Id>
-                        Edit
-                    </a>
+                <td class="d-flex justify-content-around" role="group">
+                    <a asp-action=@edit asp-route-id=@customer.Id class="btn btn-@CssHelpers.GetColor(edit)">@edit</a>
+                    <a asp-action=@delete asp-route-id=@customer.Id class="btn btn-@CssHelpers.GetColor(delete)">@delete</a>
                 </td>
             </tr>
         }

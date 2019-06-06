@@ -1,0 +1,47 @@
+﻿@model IEnumerable<SaleModel>
+
+@{
+    ViewData["Title"] = "Sales with discount";
+    const string details = nameof(SalesController.Details);
+}
+
+<h1>Sales with discount</h1>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Car make</th>
+            <th>Car model</th>
+            <th>Distance, km</th>
+            <th>Customer</th>
+            <th>Gross price</th>
+            <th>Net price</th>
+            <th>Discount</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sale in Model)
+        {
+            <tr>
+                <td>#@sale.Id</td>
+                <td>@sale.Make</td>
+                <td>@sale.Model</td>
+                <td class="text-right">@((sale.TravelledDistance / 1000).ToNumber())</td>
+                <td>@sale.Customer</td>
+                <td class="text-right">@sale.Price.ToCurrency()</td>
+                <td class="text-right">@sale.NetPrice.ToCurrency()</td>
+                <td class="text-right">
+                    <a href="/sales/discounted/@(sale.Discount * 100)">
+                        @sale.Discount.ToPercentage()
+                    </a>
+                </td>
+                <td>
+                    <a asp-action=@details asp-route-id=@sale.Id
+                       class="btn btn-block btn-@CssHelpers.GetColor(details)">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

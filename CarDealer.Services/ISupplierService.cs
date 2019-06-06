@@ -7,11 +7,11 @@
     {
         //IEnumerable<SupplierWithTypeModel> All();
 
-        IEnumerable<SupplierModel> AllByType(bool isImporter);
+        IEnumerable<SupplierListingModel> AllByType(bool isImporter);
 
         IEnumerable<SupplierModel> AllDropDown();
 
-        //bool Exists(int id);
+        bool Exists(int id);
 
         //void Create(string name, bool isImporter);
 
