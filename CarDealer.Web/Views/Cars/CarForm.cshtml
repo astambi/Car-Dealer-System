@@ -51,7 +51,7 @@
                 <label asp-for="Parts" class="control-label"></label>
                 @if (Model.Action != delete)
                 {
-                    <select asp-for="Parts" asp-items="Model.PartsSelectList" class="form-control" size="10"></select>
+                    <select asp-for="Parts" asp-items="Model.PartsSelectList" class="form-control" size="10" required></select>
                 }
                 else
                 {

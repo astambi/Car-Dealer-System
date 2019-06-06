@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using CarDealer.Services;
+    using CarDealer.Services.Models.Parts;
     using CarDealer.Web.Models.Cars;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -38,13 +39,14 @@
 
         public IActionResult Create()
             => this.View(CarFormView,
-                new CarFormModel { PartsSelectList = this.GetPartsSelectListItems() });
+                new CarFormModel { PartsSelectList = this.GetPartsSelectListItems(true) });
 
         [HttpPost]
         public IActionResult Create(CarFormModel carModel)
         {
             if (!this.ModelState.IsValid)
             {
+                carModel.PartsSelectList = this.GetPartsSelectListItems();
                 return this.View(CarFormView, carModel);
             }
 
@@ -127,9 +129,17 @@
             return this.View(cars);
         }
 
-        private IEnumerable<SelectListItem> GetPartsSelectListItems()
-            => this.partService
-            .AllDropdown()
+        private IEnumerable<SelectListItem> GetPartsSelectListItems(bool withAvailability = false)
+        {
+            var parts = withAvailability
+                ? this.partService.AllDropdown().Where(p => p.Quantity != 0)
+                : this.partService.AllDropdown();
+
+            return this.MapToSelectList(parts);
+        }
+
+        private IEnumerable<SelectListItem> MapToSelectList(IEnumerable<PartBasicModel> parts)
+            => parts
             .Select(p => new SelectListItem
             {
                 Text = p.Name,

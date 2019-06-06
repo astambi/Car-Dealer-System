@@ -14,6 +14,8 @@
     <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add car</a>
 </header>
 
+<h3>Ordered by model</h3>
+
 @if (!Model.Cars.Any())
 {
     <h3>No cars</h3>
@@ -37,7 +39,7 @@ else
                         <a asp-route-make="@car.Make">@car.Make</a>
                     </td>
                     <td>@car.Model</td>
-                    <td>@((car.TravelledDistance / 1000).ToNumber())</td>
+                    <td class="text-right">@((car.TravelledDistance / 1000).ToNumber())</td>
                     <td class="d-flex justify-content-around">
                         <a asp-action="@edit" asp-route-id="@car.Id" class="btn btn-@CssHelpers.GetColor(edit)">@edit</a>
                         <a asp-action="@delete" asp-route-id="@car.Id" class="btn btn-@CssHelpers.GetColor(delete)">@delete</a>

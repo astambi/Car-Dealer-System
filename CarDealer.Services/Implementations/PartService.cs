@@ -5,6 +5,7 @@
     using CarDealer.Data;
     using CarDealer.Data.Models;
     using CarDealer.Services.Models.Parts;
+    using Microsoft.EntityFrameworkCore;
 
     public class PartService : IPartService
     {
@@ -38,7 +39,8 @@
             .Select(p => new PartBasicModel
             {
                 Id = p.Id,
-                Name = p.Name
+                Name = p.Name,
+                Quantity = p.Quantity
             })
             .ToList();
 
@@ -73,14 +75,26 @@
 
         public void Remove(int id)
         {
-            var part = this.db.Parts.Find(id);
+            var part = this.db
+                .Parts
+                .Include(p => p.Cars)
+                .Where(p => p.Id == id)
+                .FirstOrDefault();
 
             if (part == null)
             {
                 return;
             }
 
-            this.db.Parts.Remove(part);
+            if (part.Cars.Any())
+            {
+                part.Quantity = 0; // part is in use, cannot be removed
+            }
+            else
+            {
+                this.db.Parts.Remove(part); // no cars using the part
+            }
+
             this.db.SaveChanges();
         }
 
