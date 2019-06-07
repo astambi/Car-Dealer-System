@@ -71,20 +71,7 @@
                 TravelledDistance = travelledDistance
             };
 
-            // Add car parts
-            var validPartsToAdd = this.db.Parts
-                .Where(p => selectedPartIds.Contains(p.Id))
-                .Where(p => p.Quantity != 0) // available parts
-                .ToList();
-
-            foreach (var part in validPartsToAdd)
-            {
-                // Add part
-                car.Parts.Add(new PartCar { PartId = part.Id });
-
-                // Descrease part quantity
-                part.Quantity--;
-            }
+            this.AddCarParts(car, selectedPartIds);
 
             this.db.Cars.Add(car);
             this.db.SaveChanges();
@@ -121,11 +108,12 @@
             this.db.SaveChanges();
         }
 
-        public void Update(int id, string make, string model, long travelledDistance,
+        public void Update(int id, string make, string model, long travelledDistance, 
             IEnumerable<int> selectedParts)
         {
-            var car = this.db.Cars
-                .Include(c => c.Parts)
+            var car = this.db
+                .Cars
+                .Include(c => c.Parts) // with car parts
                 .Where(c => c.Id == id)
                 .FirstOrDefault();
 
@@ -139,50 +127,53 @@
             car.Model = model;
             car.TravelledDistance = travelledDistance;
 
-            // Update car parts
+            // Get parts to update
             var currentPartIds = car.Parts.Select(pc => pc.PartId).ToList();
-            var validPartIdsToRemove = currentPartIds.Except(selectedParts).ToList();
             var selectedPartIdsToAdd = selectedParts.Except(currentPartIds).ToList();
+            var currentPartIdsToRemove = currentPartIds.Except(selectedParts).ToList();
 
-            var validPartIdsToAdd = this.db.Parts
-                .Where(p => p.Quantity != 0) // only available parts
-                .Select(p => p.Id)
-                .Intersect(selectedPartIdsToAdd)
-                .ToList();
-
-            var partsToRemove = this.db.Parts
-                .Where(p => validPartIdsToRemove.Contains(p.Id))
-                .ToList();
-
-            var partsToAdd = this.db.Parts
-                .Where(p => validPartIdsToAdd.Contains(p.Id))
-                .ToList();
-
-            // Remove parts
-            foreach (var partIdToRemove in validPartIdsToRemove)
-            {
-                // Remove part
-                var partCar = car.Parts.First(p => p.PartId == partIdToRemove);
-                car.Parts.Remove(partCar);
-
-                // Increase part quantity
-                var part = partsToRemove.First(p => p.Id == partIdToRemove);
-                part.Quantity++;
-            }
-
-            // Add parts
-            foreach (var partIdToAdd in validPartIdsToAdd)
-            {
-                // Add part 
-                car.Parts.Add(new PartCar { PartId = partIdToAdd });
-
-                // Decrease part quantity
-                var part = partsToAdd.First(p => p.Id == partIdToAdd);
-                part.Quantity--;
-            }
+            // Update car parts
+            this.AddCarParts(car, selectedPartIdsToAdd);
+            this.RemoveCarParts(car, currentPartIdsToRemove);
 
             this.db.Cars.Update(car);
             this.db.SaveChanges();
+        }
+
+        private void AddCarParts(Car car, IEnumerable<int> selectedPartIdsToAdd)
+        {
+            var partsToAdd = this.db
+                .Parts
+                .Where(p => selectedPartIdsToAdd.Contains(p.Id)) // parts to add from db
+                .Where(p => p.Quantity != 0) // available only
+                .ToList();
+
+            foreach (var part in partsToAdd)
+            {
+                // Add part to car
+                car.Parts.Add(new PartCar { PartId = part.Id });
+
+                // Descrease part quantity
+                part.Quantity--;
+            }
+        }
+
+        private void RemoveCarParts(Car car, IEnumerable<int> partIdsToRemove)
+        {
+            var partsToRemove = this.db
+                .Parts
+                .Where(p => partIdsToRemove.Contains(p.Id))
+                .ToList();
+
+            foreach (var part in partsToRemove)
+            {
+                // Remove part from car
+                var partCar = car.Parts.First(pc => pc.PartId == part.Id);
+                car.Parts.Remove(partCar);
+
+                // Increase part quantity
+                part.Quantity++;
+            }
         }
     }
 }
