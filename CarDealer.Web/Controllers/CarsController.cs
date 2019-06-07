@@ -5,6 +5,7 @@
     using System.Linq;
     using CarDealer.Services;
     using CarDealer.Services.Models.Parts;
+    using CarDealer.Web.Infrastructure.Extensions;
     using CarDealer.Web.Models.Cars;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -46,7 +47,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                carModel.PartsSelectList = this.GetPartsSelectListItems();
+                carModel.PartsSelectList = this.GetPartsSelectListItems(true);
                 return this.View(CarFormView, carModel);
             }
 
@@ -86,11 +87,7 @@
 
             try
             {
-                this.carService.Update(id,
-                    carModel.Make,
-                    carModel.Model,
-                    carModel.TravelledDistance,
-                    carModel.Parts);
+                this.carService.Update(id, carModel.Make, carModel.Model, carModel.TravelledDistance, carModel.Parts);
 
                 return this.RedirectToAction(nameof(AllByMake));
             }
@@ -129,9 +126,9 @@
             return this.View(cars);
         }
 
-        private IEnumerable<SelectListItem> GetPartsSelectListItems(bool withAvailability = false)
+        private IEnumerable<SelectListItem> GetPartsSelectListItems(bool hasPositiveQuantity = false)
         {
-            var parts = withAvailability
+            var parts = hasPositiveQuantity
                 ? this.partService.AllDropdown().Where(p => p.Quantity != 0)
                 : this.partService.AllDropdown();
 
@@ -142,7 +139,7 @@
             => parts
             .Select(p => new SelectListItem
             {
-                Text = p.Name,
+                Text = $"{p.Name} ({p.Quantity.ToNumber()} items in store)",
                 Value = p.Id.ToString()
             })
             .ToList();

@@ -108,8 +108,7 @@
             this.db.SaveChanges();
         }
 
-        public void Update(int id, string make, string model, long travelledDistance, 
-            IEnumerable<int> selectedParts)
+        public void Update(int id, string make, string model, long travelledDistance, IEnumerable<int> selectedParts)
         {
             var car = this.db
                 .Cars
@@ -144,7 +143,7 @@
         {
             var partsToAdd = this.db
                 .Parts
-                .Where(p => selectedPartIdsToAdd.Contains(p.Id)) // parts to add from db
+                .Where(p => selectedPartIdsToAdd.Contains(p.Id)) // existing parts from db
                 .Where(p => p.Quantity != 0) // available only
                 .ToList();
 
@@ -162,7 +161,7 @@
         {
             var partsToRemove = this.db
                 .Parts
-                .Where(p => partIdsToRemove.Contains(p.Id))
+                .Where(p => partIdsToRemove.Contains(p.Id)) // existing parts from db
                 .ToList();
 
             foreach (var part in partsToRemove)

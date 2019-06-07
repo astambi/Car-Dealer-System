@@ -38,10 +38,13 @@
             services
                 .AddDefaultIdentity<IdentityUser>(options =>
                 {
+                    // Password settings
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
+                    // User settings
+                    options.User.RequireUniqueEmail = false;
                 })
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<CarDealerDbContext>();
