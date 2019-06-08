@@ -32,11 +32,11 @@
 
             services
                 .AddDbContext<CarDealerDbContext>(options
-                => options.UseSqlServer(
-                    this.Configuration.GetConnectionString("DefaultConnection")));
+                    => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
 
             services
-                .AddDefaultIdentity<IdentityUser>(options =>
+                //.AddDefaultIdentity<IdentityUser>(options =>
+                .AddIdentity<IdentityUser, IdentityRole>(options =>
                 {
                     // Password settings
                     options.Password.RequireDigit = false;
@@ -44,18 +44,35 @@
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     // User settings
-                    options.User.RequireUniqueEmail = false;
+                    options.User.RequireUniqueEmail = true;
                 })
                 .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<CarDealerDbContext>();
+                .AddEntityFrameworkStores<CarDealerDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddDomainServices(); // register services with reflexion
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services
-                .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .AddMvc(options =>
+                {
+                    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddRazorPagesOptions(options =>
+                {
+                    options.AllowAreas = true;
+                    options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
+                    options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
+                });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
