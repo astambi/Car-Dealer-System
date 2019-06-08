@@ -18,9 +18,6 @@
             this.db = db;
         }
 
-        public IEnumerable<CarBasicModel> AllBasic()
-            => throw new NotImplementedException();
-
         public IEnumerable<CarModel> AllByMake(string make)
         {
             var cars = this.db.Cars.AsQueryable(); // make == null => all cars
@@ -42,6 +39,20 @@
                 })
                 .ToList();
         }
+
+        public IEnumerable<CarModel> AllDropdown()
+            => this.db
+            .Cars
+            .OrderBy(c => c.Make)
+            .ThenBy(c => c.Model)
+            .Select(c => new CarModel
+            {
+                Id = c.Id,
+                Make = c.Make,
+                Model = c.Model,
+                TravelledDistance = c.TravelledDistance
+            })
+            .ToList();
 
         public IEnumerable<CarWithPartsModel> AllWithParts()
             => this.db
@@ -71,6 +82,7 @@
                 TravelledDistance = travelledDistance
             };
 
+            // Add parts
             this.AddCarParts(car, selectedPartIds);
 
             this.db.Cars.Add(car);
@@ -91,6 +103,17 @@
                 Model = c.Model,
                 TravelledDistance = c.TravelledDistance,
                 Parts = c.Parts.Select(cp => cp.PartId).ToList()
+            })
+            .FirstOrDefault();
+
+        public CarWithPrice GetByIdWithPrice(int id)
+            => this.db
+            .Cars
+            .Where(c => c.Id == id)
+            .Select(c => new CarWithPrice
+            {
+                MakeModel = $"{c.Make} {c.Model}",
+                Price = c.Parts.Select(cp => cp.Part.Price).Sum()
             })
             .FirstOrDefault();
 

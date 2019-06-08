@@ -7,6 +7,7 @@
     using CarDealer.Services.Models.Parts;
     using CarDealer.Web.Infrastructure.Extensions;
     using CarDealer.Web.Models.Cars;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -38,10 +39,12 @@
             return this.View(model);
         }
 
+        [Authorize]
         public IActionResult Create()
             => this.View(CarFormView,
                 new CarFormModel { PartsSelectList = this.GetPartsSelectListItems(true) });
 
+        [Authorize]
         [HttpPost]
         public IActionResult Create(CarFormModel carModel)
         {
@@ -68,9 +71,11 @@
             }
         }
 
+        [Authorize]
         public IActionResult Edit(int id)
             => this.LoadEditDeleteView(id, nameof(Edit));
 
+        [Authorize]
         [HttpPost]
         public IActionResult Edit(int id, CarFormModel carModel)
         {
@@ -98,9 +103,11 @@
             }
         }
 
+        [Authorize]
         public IActionResult Delete(int id)
             => this.LoadEditDeleteView(id, nameof(Delete));
 
+        [Authorize]
         [HttpPost]
         public IActionResult Delete(int id, CarFormModel carModel)
         {
@@ -135,15 +142,6 @@
             return this.MapToSelectList(parts);
         }
 
-        private IEnumerable<SelectListItem> MapToSelectList(IEnumerable<PartBasicModel> parts)
-            => parts
-            .Select(p => new SelectListItem
-            {
-                Text = $"{p.Name} ({p.Quantity.ToNumber()} items in store)",
-                Value = p.Id.ToString()
-            })
-            .ToList();
-
         private IActionResult LoadEditDeleteView(int id, string action)
         {
             var car = this.carService.GetById(id);
@@ -165,5 +163,14 @@
 
             return this.View(CarFormView, carModel);
         }
+
+        private IEnumerable<SelectListItem> MapToSelectList(IEnumerable<PartBasicModel> parts)
+            => parts
+            .Select(p => new SelectListItem
+            {
+                Text = $"{p.Name} ({p.Quantity.ToNumber()} items in store)",
+                Value = p.Id.ToString()
+            })
+            .ToList();
     }
 }

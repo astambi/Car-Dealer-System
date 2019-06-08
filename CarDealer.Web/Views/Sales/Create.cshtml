@@ -1,0 +1,41 @@
+﻿@model SaleFormModel
+
+@{
+    ViewData["Title"] = "Create sale";
+    const string create = nameof(SalesController.Create);
+    const string reviewCreate = nameof(SalesController.ReviewCreate);
+}
+
+<h1>Create sale</h1>
+
+<div class="row justify-content-start">
+    <div class="col-md-6">
+        <form asp-action=@reviewCreate method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CustomerId" class="control-label"></label>
+                <select asp-for="CustomerId" asp-items="Model.Customers" class="form-control" required >
+                    <option value="-1" selected disabled>Choose...</option>
+                </select>
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CarId" class="control-label"></label>
+                <select asp-for="CarId" asp-items="Model.Cars" class="form-control" required >
+                    <option value="-1" selected disabled>Choose...</option>
+                </select>
+                <span asp-validation-for="CarId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount" class="control-label"></label>, %
+                <input asp-for="Discount" class="form-control" type="number" min="0" max="100" step="0.1" />
+                <span asp-validation-for="Discount" class="text-danger"></span>
+            </div>
+
+            <partial name="../Shared/_FormSubmitPartial" model="create" />
+        </form>
+    </div>
+</div>
+
+<a asp-action="@(nameof(SalesController.All))">Back to List</a>
+

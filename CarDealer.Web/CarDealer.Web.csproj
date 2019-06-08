@@ -19,9 +19,4 @@
     <ProjectReference Include="..\CarDealer.Services\CarDealer.Services.csproj" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="Models\Sales\" />
-  </ItemGroup>
-
 </Project>

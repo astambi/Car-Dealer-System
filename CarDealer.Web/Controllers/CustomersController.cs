@@ -5,6 +5,7 @@
     using CarDealer.Services.Models;
     using CarDealer.Web.Infrastructure.Extensions;
     using CarDealer.Web.Models.Customers;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class CustomersController : Controller
@@ -44,6 +45,7 @@
             return this.ViewOrRedirect(totalSales);
         }
 
+        [Authorize]
         public IActionResult Create()
             => this.View(CustomerFormView,
                 new CustomerFormModel
@@ -52,6 +54,7 @@
                     BirthDate = DateTime.Now // to avoid incorrect date initialisation
                 });
 
+        [Authorize]
         [HttpPost]
         public IActionResult Create(CustomerFormModel model)
         {
@@ -71,9 +74,11 @@
             }
         }
 
+        [Authorize]
         public IActionResult Edit(int id)
             => this.LoadEditDeleteView(id, nameof(Edit));
 
+        [Authorize]
         [HttpPost]
         public IActionResult Edit(int id, CustomerFormModel model)
         {
@@ -98,9 +103,11 @@
             }
         }
 
+        [Authorize]
         public IActionResult Delete(int id)
             => this.LoadEditDeleteView(id, nameof(Delete));
 
+        [Authorize]
         [HttpPost]
         public IActionResult Delete(int id, CustomerFormModel model)
         {

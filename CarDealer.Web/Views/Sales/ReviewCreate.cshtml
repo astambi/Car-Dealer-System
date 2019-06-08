@@ -1,0 +1,48 @@
+﻿@model SaleReviewModel
+
+@{
+    ViewData["Title"] = "Review sale";
+    const string Create = "Create";
+    const string finalizeCreate = nameof(SalesController.FinalizeCreate);
+    var discountBreakdown = Model.AdditionalDiscount != 0
+        ? $"{Model.TotalDiscount}% (incl. {Model.AdditionalDiscount}% bonus)"
+        : $"{Model.TotalDiscount}%";
+}
+
+<h1>Review sale</h1>
+
+<div class="row justify-content-start">
+    <div class="col-md-6">
+        <form asp-action=@finalizeCreate method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Customer" class="control-label"></label>
+                <input asp-for="Customer" class="form-control" readonly />
+                <input asp-for="CustomerId" class="form-control" hidden />
+            </div>
+            <div class="form-group">
+                <label asp-for="Car" class="control-label"></label>
+                <input asp-for="Car" class="form-control" readonly />
+                <input asp-for="CarId" class="form-control" hidden />
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount" class="control-label"></label>, %
+                <input asp-for="Discount" class="form-control" hidden />
+                <input asp-for="AdditionalDiscount" class="form-control" hidden />
+                <input value="@discountBreakdown" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="NetPrice" class="control-label"></label>
+                <input asp-for="NetPrice" class="form-control" readonly />
+            </div>
+
+            <partial name="../Shared/_FormSubmitPartial" model="Create" />
+        </form>
+    </div>
+</div>
+
+<a asp-action="@(nameof(SalesController.Create))">Back to Create</a>

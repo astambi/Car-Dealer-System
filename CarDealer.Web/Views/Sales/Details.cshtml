@@ -8,7 +8,7 @@
 
 <section class="lead">
     <article class="row">
-        <h4 class="col-md-4">@Html.DisplayNameFor(model => model.Customer)</h4>
+        <h5 class="col-md-4">@Html.DisplayNameFor(model => model.Customer)</h5>
         <div class="col-auto">@Model.Customer</div>
     </article>
     <article class="row">
@@ -32,8 +32,7 @@
         <div class="col-auto">@Model.Discount.ToPercentage()</div>
     </article>
     <article class="row border-top font-weight-bold">
-        <h4 class="col-md-4 font-weight-bold">@Html.DisplayNameFor(model => model.NetPrice)</h4>
+        <h5 class="col-md-4 font-weight-bold">@Html.DisplayNameFor(model => model.NetPrice)</h5>
         <div class="col-auto">@Model.NetPrice.ToCurrency()</div>
     </article>
 </section>
-

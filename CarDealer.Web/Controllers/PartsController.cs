@@ -6,6 +6,7 @@
     using CarDealer.Services;
     using CarDealer.Web.Models;
     using CarDealer.Web.Models.Parts;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -40,17 +41,16 @@
             return this.View(model);
         }
 
-        // GET: Parts/Details/5
         public IActionResult Details(int id) => this.View();
 
-        // GET: Parts/Create
+        [Authorize]
         public IActionResult Create()
         {
             var model = new PartFormModel { Suppliers = this.GetSuppliersSelectListItems() };
             return this.View(PartFormView, model);
         }
 
-        // POST: Parts/Create
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(PartFormModel model)
@@ -78,10 +78,10 @@
             }
         }
 
-        // GET: Parts/Edit/5
+        [Authorize]
         public IActionResult Edit(int id) => this.LoadEditDeleteView(id, nameof(Edit));
 
-        // POST: Parts/Edit/5
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, PartFormModel model)
@@ -107,10 +107,10 @@
             }
         }
 
-        // GET: Parts/Delete/5
+        [Authorize]
         public IActionResult Delete(int id) => this.LoadEditDeleteView(id, nameof(Delete));
 
-        // POST: Parts/Delete/5
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id, PartFormModel model)

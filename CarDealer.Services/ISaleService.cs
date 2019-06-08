@@ -7,12 +7,10 @@
     {
         IEnumerable<SaleModel> All();
 
-        IEnumerable<SaleModel> Discounted(int? discount);
+        IEnumerable<SaleModel> AllDiscounted(int? discount);
 
         SaleModel ById(int id);
 
-        //SaleReviewModel SaleReview(int carId, int customerId, double discount);
-
-        void Create(int customerId, int carId, double discount);
+        void Create(int customerId, int carId, double discount); // discount [0, 100]
     }
 }

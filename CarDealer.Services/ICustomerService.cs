@@ -7,7 +7,7 @@
 
     public interface ICustomerService
     {
-        //IEnumerable<CustomerBasicModel> AllBasic();
+        IEnumerable<CustomerBasicModel> AllDropdown();
 
         IEnumerable<CustomerModel> AllOrdered(OrderDirection order);
 
@@ -16,6 +16,8 @@
         bool Exists(int id);
 
         CustomerModel GetById(int id);
+
+        CustomerAdditionalDiscount GetByIdWithAdditionalDiscount(int id);
 
         void Remove(int id);
 

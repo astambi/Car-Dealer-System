@@ -18,6 +18,17 @@
             this.db = db;
         }
 
+        public IEnumerable<CustomerBasicModel> AllDropdown()
+            => this.db
+            .Customers
+            .OrderBy(c => c.Name)
+            .Select(c => new CustomerBasicModel
+            {
+                Id = c.Id,
+                Name = c.Name
+            })
+            .ToList();
+
         public IEnumerable<CustomerModel> AllOrdered(OrderDirection order)
         {
             var customersQuery = this.db.Customers.AsQueryable();
@@ -75,6 +86,19 @@
                 Name = c.Name,
                 BirthDate = c.BirthDate,
                 IsYoungDriver = c.IsYoungDriver
+            })
+            .FirstOrDefault();
+
+        public CustomerAdditionalDiscount GetByIdWithAdditionalDiscount(int id)
+            => this.db
+            .Customers
+            .Where(c => c.Id == id)
+            .Select(c => new CustomerAdditionalDiscount
+            {
+                Name = c.Name,
+                AdditionalDiscount = c.IsYoungDriver
+                    ? (int)(100 * ServicesConstants.YoungDriverDiscount)
+                    : 0
             })
             .FirstOrDefault();
 
