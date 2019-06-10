@@ -28,8 +28,12 @@
         // All Parts
         public IActionResult Index(int currentPage = 1)
         {
-            var partsCurrentPage = this.partService.All(currentPage, WebConstants.PageSize);
             var partsTotal = this.partService.Total();
+
+            var totalPages = PaginationHelpers.GetTotalPages(partsTotal);
+            currentPage = PaginationHelpers.GetValidCurrentPage(currentPage, totalPages);
+
+            var partsCurrentPage = this.partService.All(currentPage, WebConstants.PageSize);
 
             var model = new PartPageListingModel
             {
@@ -39,7 +43,7 @@
                     Controller = WebConstants.PartsControllerName,
                     Action = nameof(Index),
                     CurrentPage = currentPage,
-                    TotalPages = PaginationHelpers.GetTotalPages(partsTotal)
+                    TotalPages = totalPages
                 }
             };
 

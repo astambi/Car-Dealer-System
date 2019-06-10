@@ -20,8 +20,12 @@
         [Authorize]
         public IActionResult All(string search = null, int currentPage = 1)
         {
-            var logsCurrentPage = this.logService.All(search, currentPage, WebConstants.PageSize);
             var logsTotal = this.logService.Total(search);
+
+            var totalPages = PaginationHelpers.GetTotalPages(logsTotal);
+            currentPage = PaginationHelpers.GetValidCurrentPage(currentPage, totalPages);
+
+            var logsCurrentPage = this.logService.All(search, currentPage, WebConstants.PageSize);
 
             var model = new LogPageListingModel
             {
@@ -32,7 +36,7 @@
                     Action = nameof(All),
                     SearchTerm = search,
                     CurrentPage = currentPage,
-                    TotalPages = PaginationHelpers.GetTotalPages(logsTotal)
+                    TotalPages = totalPages
                 }
             };
 
