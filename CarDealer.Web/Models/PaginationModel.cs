@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CarDealer.Web.Models
+﻿namespace CarDealer.Web.Models
 {
     public class PaginationModel
     {

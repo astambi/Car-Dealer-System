@@ -1,0 +1,8 @@
+﻿@model SearchModel
+
+<form asp-controller="@Model.Controller" asp-action="@Model.Action" method="post" class="form-inline">
+    <div class="form-group">
+        <input type="search" name="search" value="@Model.SearchTerm" placeholder="@Model.Placeholder" class="form-control mr-sm-2" />
+        <input type="submit" value="Search" class="btn btn-outline-primary my-2 my-sm-0" />
+    </div>
+</form>
