@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using CarDealer.Services;
+    using CarDealer.Web.Infrastructure.Filters;
     using CarDealer.Web.Models;
     using CarDealer.Web.Models.Parts;
     using Microsoft.AspNetCore.Authorization;
@@ -52,7 +53,7 @@
 
         [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Log]
         public IActionResult Create(PartFormModel model)
         {
             if (!this.supplierService.Exists(model.SupplierId))
@@ -83,7 +84,7 @@
 
         [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Log]
         public IActionResult Edit(int id, PartFormModel model)
         {
             if (!this.partService.Exists(id))
@@ -112,7 +113,7 @@
 
         [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Log]
         public IActionResult Delete(int id, PartFormModel model)
         {
             if (!this.partService.Exists(id))

@@ -4,6 +4,7 @@
     using System.Linq;
     using CarDealer.Services;
     using CarDealer.Web.Infrastructure.Extensions;
+    using CarDealer.Web.Infrastructure.Filters;
     using CarDealer.Web.Models.Sales;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -100,6 +101,7 @@
 
         [Authorize]
         [HttpPost]
+        [Log(actionName: "create")]
         public IActionResult FinalizeCreate(SaleReviewModel model)
         {
             if (!this.customerService.Exists(model.CustomerId))

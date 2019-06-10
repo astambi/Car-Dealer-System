@@ -4,6 +4,7 @@
     using CarDealer.Services;
     using CarDealer.Services.Models;
     using CarDealer.Web.Infrastructure.Extensions;
+    using CarDealer.Web.Infrastructure.Filters;
     using CarDealer.Web.Models.Customers;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,7 @@
 
         [Authorize]
         [HttpPost]
+        [Log]
         public IActionResult Create(CustomerFormModel model)
         {
             if (!this.ModelState.IsValid)
@@ -80,6 +82,7 @@
 
         [Authorize]
         [HttpPost]
+        [Log]
         public IActionResult Edit(int id, CustomerFormModel model)
         {
             if (!this.customerService.Exists(id))
@@ -109,6 +112,7 @@
 
         [Authorize]
         [HttpPost]
+        [Log]
         public IActionResult Delete(int id, CustomerFormModel model)
         {
             if (!this.customerService.Exists(id))
