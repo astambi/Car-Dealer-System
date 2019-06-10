@@ -5,20 +5,20 @@
 
     public interface ISupplierService
     {
-        //IEnumerable<SupplierWithTypeModel> All();
+        IEnumerable<SupplierListingModel> All();
 
         IEnumerable<SupplierListingModel> AllByType(bool isImporter);
 
         IEnumerable<SupplierModel> AllDropDown();
 
+        void Create(string name, bool isImporter);
+
         bool Exists(int id);
 
-        //void Create(string name, bool isImporter);
+        SupplierWithTypeModel GetById(int id);
 
-        //void Delete(int id);
+        void Remove(int id);
 
-        //SupplierWithTypeModel GetById(int id);
-
-        //void Update(int id, string name, bool isImporter);
+        void Update(int id, string name, bool isImporter);
     }
 }

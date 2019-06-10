@@ -2,9 +2,20 @@
 
 @{
     ViewData["Title"] = "Suppliers";
+    const string create = nameof(SuppliersController.Create);
+    const string delete = nameof(SuppliersController.Delete);
+    const string edit = nameof(SuppliersController.Edit);
 }
 
-<h1>Suppliers @Model.Type </h1>
+
+<header class="d-flex flex-wrap justify-content-between align-items-center">
+    <h1>Suppliers @Model.Type </h1>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add supplier</a>
+    }
+</header>
 
 @if (!Model.Suppliers.Any())
 {
@@ -18,6 +29,7 @@ else
                 <th>Id</th>
                 <th>Name</th>
                 <th>Total parts</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +39,10 @@ else
                     <td>#@supplier.Id</td>
                     <td>@supplier.Name</td>
                     <td>@supplier.TotalParts</td>
+                    <td>
+                        <a asp-action="@edit" asp-route-id="@supplier.Id" class="btn btn-@CssHelpers.GetColor(edit)">@edit</a>
+                        <a asp-action="@delete" asp-route-id="@supplier.Id" class="btn btn-@CssHelpers.GetColor(delete)">@delete</a>
+                    </td>
                 </tr>
             }
         </tbody>

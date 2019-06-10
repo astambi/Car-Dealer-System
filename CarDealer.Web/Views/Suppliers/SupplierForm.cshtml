@@ -1,0 +1,46 @@
+﻿@model SupplierFormModel
+
+@{
+    ViewData["Title"] = "Supplier Form";
+    const string delete = nameof(SuppliersController.Delete);
+}
+
+<h1>@Model.Action supplier</h1>
+
+<div class="row justify-content-start">
+    <div class="col-md-6">
+        <form asp-action=@Model.Action method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                @if (Model.Action != delete)
+                {
+                    <input asp-for="Name" class="form-control" required />
+                }
+                else
+                {
+                    <input asp-for="Name" class="form-control" readonly />
+                }
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label asp-for="IsImporter" class="form-check-label">
+                    @if (Model.Action != delete)
+                    {
+                        <input asp-for="IsImporter" class="form-check-input" />
+                    }
+                    else
+                    {
+                        <input asp-for="IsImporter" class="form-check-input" disabled />
+                    }
+                    @Html.DisplayNameFor(model => model.IsImporter)
+                </label>
+                <span asp-validation-for="IsImporter" class="text-danger"></span>
+            </div>
+
+            <partial name="../Shared/_FormSubmitPartial" model="Model.Action" />
+        </form>
+    </div>
+</div>
+
+<a asp-action="@(nameof(SuppliersController.Importers))">Back to List</a>

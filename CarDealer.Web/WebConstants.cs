@@ -7,6 +7,7 @@
         public const string CustomersControllerName = "customers";
         public const string PartsControllerName = "parts";
         public const string SalesControllerName = "sales";
+        public const string SuppliersControllerName = "suppliers";
         // Pagination
         public const int PageSize = 20;
         // Style

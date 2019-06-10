@@ -33,7 +33,10 @@
                                 Customers
                             </a>
                             <div class="dropdown-menu" aria-labelledby="customersDropdown">
-                                <a asp-controller="Customers" asp-action=@(nameof(CustomersController.Create)) class="dropdown-item text-dark">Create</a>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-controller="Customers" asp-action=@(nameof(CustomersController.Create)) class="dropdown-item text-dark">Create</a>
+                                }
                                 <a asp-controller="Customers" asp-action=@(nameof(CustomersController.All)) class="dropdown-item text-dark">All</a>
                             </div>
                         </li>
@@ -42,7 +45,10 @@
                                 Cars
                             </a>
                             <div class="dropdown-menu" aria-labelledby="carsDropdown">
-                                <a asp-controller="Cars" asp-action=@(nameof(CarsController.Create)) class="dropdown-item text-dark">Create</a>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-controller="Cars" asp-action=@(nameof(CarsController.Create)) class="dropdown-item text-dark">Create</a>
+                                }
                                 <a asp-controller="Cars" asp-action=@(nameof(CarsController.AllByMake)) class="dropdown-item text-dark">All by Make</a>
                                 <a asp-controller="Cars" asp-action=@(nameof(CarsController.Parts)) class="dropdown-item text-dark">All with Parts</a>
                             </div>
@@ -52,7 +58,10 @@
                                 Parts
                             </a>
                             <div class="dropdown-menu" aria-labelledby="partsDropdown">
-                                <a asp-controller="Parts" asp-action=@(nameof(PartsController.Create)) class="dropdown-item text-dark">Create</a>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-controller="Parts" asp-action=@(nameof(PartsController.Create)) class="dropdown-item text-dark">Create</a>
+                                }
                                 <a asp-controller="Parts" asp-action=@(nameof(PartsController.Index)) class="dropdown-item text-dark">All</a>
                             </div>
                         </li>
@@ -61,7 +70,10 @@
                                 Sales
                             </a>
                             <div class="dropdown-menu" aria-labelledby="salesDropdown">
-                                <a asp-controller="Sales" asp-action=@(nameof(SalesController.Create)) class="dropdown-item text-dark">Create</a>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-controller="Sales" asp-action=@(nameof(SalesController.Create)) class="dropdown-item text-dark">Create</a>
+                                }
                                 <a asp-controller="Sales" asp-action=@(nameof(SalesController.All)) class="dropdown-item text-dark">All</a>
                                 <a asp-controller="Sales" asp-action=@(nameof(SalesController.Discounted)) class="dropdown-item text-dark">Discounted</a>
                             </div>
@@ -71,10 +83,21 @@
                                 Suppliers
                             </a>
                             <div class="dropdown-menu" aria-labelledby="suppliersDropdown">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-controller="Suppliers" asp-action=@(nameof(SuppliersController.Create)) class="dropdown-item text-dark">Create</a>
+                                }
+                                <a asp-controller="Suppliers" asp-action=@(nameof(SuppliersController.All)) class="dropdown-item text-dark">All</a>
                                 <a asp-controller="Suppliers" asp-action=@(nameof(SuppliersController.Local)) class="dropdown-item text-dark">Local</a>
                                 <a asp-controller="Suppliers" asp-action=@(nameof(SuppliersController.Importers)) class="dropdown-item text-dark">Importers</a>
                             </div>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a asp-controller="Logs" asp-action=@(nameof(LogsController.All)) class="nav-link text-dark">Logs</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
