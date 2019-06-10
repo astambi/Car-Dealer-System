@@ -13,7 +13,10 @@
     <h1 class="justify-content-between">
         All customers
     </h1>
-    <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add customer</a>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add customer</a>
+    }
 </header>
 
 <h3>

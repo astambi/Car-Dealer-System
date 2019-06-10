@@ -113,7 +113,7 @@
             part.Price = price;
             part.Quantity = quantity;
 
-            this.db.Parts.Update(part);
+            //this.db.Parts.Update(part);
             this.db.SaveChanges();
         }
     }

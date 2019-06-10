@@ -2,10 +2,17 @@
 
 @{
     ViewData["Title"] = "Sales with discount";
+    const string create = nameof(SalesController.Create);
     const string details = nameof(SalesController.Details);
 }
 
-<h1>Sales with discount</h1>
+<header class="d-flex flex-wrap justify-content-between align-items-center">
+    <h1>Sales with discount</h1>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add sale</a>
+    }
+</header>
 
 <table class="table table-hover">
     <thead>

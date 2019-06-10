@@ -5,9 +5,7 @@
 
     public interface ILogService
     {
-        IEnumerable<LogListingModel> All();
-
-        //IEnumerable<LogListingModel> All(string search, int page, int pageSize);
+        IEnumerable<LogListingModel> All(string search, int page, int pageSize);
 
         void Clear();
 

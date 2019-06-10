@@ -158,7 +158,7 @@
             this.AddCarParts(car, selectedPartIdsToAdd);
             this.RemoveCarParts(car, currentPartIdsToRemove);
 
-            this.db.Cars.Update(car);
+            //this.db.Cars.Update(car);
             this.db.SaveChanges();
         }
 

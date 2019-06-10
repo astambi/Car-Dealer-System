@@ -12,10 +12,11 @@
     <h1>
         All parts
     </h1>
-    <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add part</a>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add part</a>
+    }
 </header>
-
-<partial name="../Shared/_PaginationPartial" model="Model.Pagination" />
 
 <table class="table table-hover">
     <thead>
@@ -46,3 +47,5 @@
         }
     </tbody>
 </table>
+
+<partial name="../Shared/_PaginationPartial" model="Model.Pagination" />

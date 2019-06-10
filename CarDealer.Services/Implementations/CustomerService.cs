@@ -144,7 +144,7 @@
             customer.Name = name;
             customer.BirthDate = birthDate;
 
-            this.db.Customers.Update(customer);
+            //this.db.Customers.Update(customer);
             this.db.SaveChanges();
         }
     }

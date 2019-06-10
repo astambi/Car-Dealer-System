@@ -11,7 +11,10 @@
     <h1 class="justify-content-between">
         @Model.Make.ToUpper() cars
     </h1>
-    <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add car</a>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add car</a>
+    }
 </header>
 
 <h3>Ordered by model</h3>

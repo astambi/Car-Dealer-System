@@ -5,6 +5,7 @@
     using System.Linq;
     using CarDealer.Services;
     using CarDealer.Web.Infrastructure.Filters;
+    using CarDealer.Web.Infrastructure.Helpers;
     using CarDealer.Web.Models;
     using CarDealer.Web.Models.Parts;
     using Microsoft.AspNetCore.Authorization;
@@ -24,18 +25,21 @@
             this.supplierService = supplierService;
         }
 
-        // GET: Parts
+        // All Parts
         public IActionResult Index(int currentPage = 1)
         {
+            var partsCurrentPage = this.partService.All(currentPage, WebConstants.PageSize);
+            var partsTotal = this.partService.Total();
+
             var model = new PartPageListingModel
             {
-                Parts = this.partService.All(currentPage, WebConstants.PageSize),
+                Parts = partsCurrentPage,
                 Pagination = new PaginationModel
                 {
-                    CurrentPage = currentPage,
-                    TotalPages = (int)Math.Ceiling(this.partService.Total() / (double)WebConstants.PageSize),
                     Controller = WebConstants.PartsControllerName,
-                    Action = nameof(Index)
+                    Action = nameof(Index),
+                    CurrentPage = currentPage,
+                    TotalPages = PaginationHelpers.GetTotalPages(partsTotal)
                 }
             };
 
