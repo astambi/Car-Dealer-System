@@ -50,7 +50,7 @@
             return this.View(model);
         }
 
-        public IActionResult Details(int id) => this.View();
+        public IActionResult Details(int id) => this.View(); // TODO
 
         [Authorize]
         public IActionResult Create()

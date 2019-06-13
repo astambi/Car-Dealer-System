@@ -1,5 +1,6 @@
 ﻿namespace CarDealer.Web
 {
+    using AutoMapper;
     using CarDealer.Data;
     using CarDealer.Web.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Builder;
@@ -21,7 +22,6 @@
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -35,7 +35,6 @@
                     => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
 
             services
-                //.AddDefaultIdentity<IdentityUser>(options =>
                 .AddIdentity<IdentityUser, IdentityRole>(options =>
                 {
                     // Password settings
@@ -51,6 +50,9 @@
                 .AddDefaultTokenProviders();
 
             services.AddDomainServices(); // register services with reflexion
+
+            // AutoMapper
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
@@ -75,7 +77,6 @@
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

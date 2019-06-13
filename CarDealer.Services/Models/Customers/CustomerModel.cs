@@ -2,8 +2,10 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using CarDealer.Common.Mapping;
+    using CarDealer.Data.Models;
 
-    public class CustomerModel
+    public class CustomerModel : IMapFrom<Customer>
     {
         public int Id { get; set; }
 

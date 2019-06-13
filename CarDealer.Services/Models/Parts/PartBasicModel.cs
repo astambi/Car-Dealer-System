@@ -1,6 +1,9 @@
 ﻿namespace CarDealer.Services.Models.Parts
 {
-    public class PartBasicModel
+    using CarDealer.Common.Mapping;
+    using CarDealer.Data.Models;
+
+    public class PartBasicModel : IMapFrom<Part>
     {
         public int Id { get; set; }
 

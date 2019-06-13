@@ -1,8 +1,10 @@
 ﻿namespace CarDealer.Services.Models.Logs
 {
     using System;
+    using CarDealer.Common.Mapping;
+    using CarDealer.Data.Models;
 
-    public class LogListingModel
+    public class LogListingModel : IMapFrom<Log>
     {
         public string User { get; set; }
 

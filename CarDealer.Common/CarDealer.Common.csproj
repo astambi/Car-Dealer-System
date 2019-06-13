@@ -8,9 +8,4 @@
     <PackageReference Include="AutoMapper" Version="8.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CarDealer.Common\CarDealer.Common.csproj" />
-    <ProjectReference Include="..\CarDealer.Data\CarDealer.Data.csproj" />
-  </ItemGroup>
-
 </Project>

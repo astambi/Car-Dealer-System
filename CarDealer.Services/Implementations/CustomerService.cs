@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using AutoMapper;
     using CarDealer.Data;
     using CarDealer.Data.Models;
     using CarDealer.Services.Models;
@@ -12,21 +13,19 @@
     public class CustomerService : ICustomerService
     {
         private readonly CarDealerDbContext db;
+        private readonly IMapper mapper;
 
-        public CustomerService(CarDealerDbContext db)
+        public CustomerService(CarDealerDbContext db, IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
         public IEnumerable<CustomerBasicModel> AllDropdown()
             => this.db
             .Customers
             .OrderBy(c => c.Name)
-            .Select(c => new CustomerBasicModel
-            {
-                Id = c.Id,
-                Name = c.Name
-            })
+            .Select(c => this.mapper.Map<CustomerBasicModel>(c))
             .ToList();
 
         public IEnumerable<CustomerModel> AllOrdered(OrderDirection order)
@@ -50,13 +49,7 @@
             }
 
             return customersQuery
-                .Select(c => new CustomerModel
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    BirthDate = c.BirthDate,
-                    IsYoungDriver = c.IsYoungDriver
-                })
+                .Select(c => this.mapper.Map<CustomerModel>(c))
                 .ToList();
         }
 
@@ -80,13 +73,7 @@
             => this.db
             .Customers
             .Where(c => c.Id == id)
-            .Select(c => new CustomerModel
-            {
-                Id = c.Id,
-                Name = c.Name,
-                BirthDate = c.BirthDate,
-                IsYoungDriver = c.IsYoungDriver
-            })
+            .Select(c => this.mapper.Map<CustomerModel>(c))
             .FirstOrDefault();
 
         public CustomerAdditionalDiscount GetByIdWithAdditionalDiscount(int id)

@@ -1,6 +1,9 @@
 ﻿namespace CarDealer.Services.Models.Cars
 {
-    public class CarBasicModel
+    using CarDealer.Common.Mapping;
+    using CarDealer.Data.Models;
+
+    public class CarBasicModel : IMapFrom<Car>
     {
         public int Id { get; set; }
 

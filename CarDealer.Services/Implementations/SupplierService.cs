@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using AutoMapper;
     using CarDealer.Data;
     using CarDealer.Data.Models;
     using CarDealer.Services.Models.Suppliers;
@@ -9,10 +10,12 @@
     public class SupplierService : ISupplierService
     {
         private readonly CarDealerDbContext db;
+        private readonly IMapper mapper;
 
-        public SupplierService(CarDealerDbContext db)
+        public SupplierService(CarDealerDbContext db, IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
         public IEnumerable<SupplierListingModel> All()
@@ -44,11 +47,7 @@
             => this.db
             .Suppliers
             .OrderBy(s => s.Name)
-            .Select(s => new SupplierModel
-            {
-                Id = s.Id,
-                Name = s.Name
-            })
+            .Select(s => this.mapper.Map<SupplierModel>(s))
             .ToList();
 
         public void Create(string name, bool isImporter)
@@ -70,12 +69,7 @@
             => this.db
             .Suppliers
             .Where(s => s.Id == id)
-            .Select(s => new SupplierWithTypeModel
-            {
-                Id = s.Id,
-                Name = s.Name,
-                IsImporter = s.IsImporter
-            })
+            .Select(s => this.mapper.Map<SupplierWithTypeModel>(s))
             .FirstOrDefault();
 
         public void Remove(int id)

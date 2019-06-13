@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using AutoMapper;
     using CarDealer.Data;
     using CarDealer.Data.Models;
     using CarDealer.Services.Models.Parts;
@@ -10,10 +11,12 @@
     public class PartService : IPartService
     {
         private readonly CarDealerDbContext db;
+        private readonly IMapper mapper;
 
-        public PartService(CarDealerDbContext db)
+        public PartService(CarDealerDbContext db, IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
         public IEnumerable<PartListingModel> All(int page = 1, int pageSize = ServicesConstants.PageSize)
@@ -36,12 +39,7 @@
             => this.db
             .Parts
             .OrderBy(p => p.Name)
-            .Select(p => new PartBasicModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Quantity = p.Quantity
-            })
+            .Select(p => this.mapper.Map<PartBasicModel>(p))
             .ToList();
 
         public void Create(string name, decimal price, int quantity, int supplierId)
@@ -65,12 +63,7 @@
             => this.db
             .Parts
             .Where(p => p.Id == id)
-            .Select(p => new PartEditDeleteModel
-            {
-                Name = p.Name,
-                Price = p.Price,
-                Quantity = p.Quantity
-            })
+            .Select(p => this.mapper.Map<PartEditDeleteModel>(p))
             .FirstOrDefault();
 
         public void Remove(int id)

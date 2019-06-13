@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using AutoMapper;
     using CarDealer.Data;
     using CarDealer.Data.Models;
     using CarDealer.Services.Models.Logs;
@@ -9,10 +10,12 @@
     public class LogService : ILogService
     {
         private readonly CarDealerDbContext db;
+        private readonly IMapper mapper;
 
-        public LogService(CarDealerDbContext db)
+        public LogService(CarDealerDbContext db, IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
         public IEnumerable<LogListingModel> All(string search, int page, int pageSize)
@@ -20,13 +23,7 @@
             .OrderBy(l => l.Time)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(l => new LogListingModel
-            {
-                User = l.User,
-                ModifiedTable = l.ModifiedTable,
-                Operation = l.Operation,
-                Time = l.Time
-            })
+            .Select(l => this.mapper.Map<LogListingModel>(l))           
             .ToList();
 
         public void Clear()

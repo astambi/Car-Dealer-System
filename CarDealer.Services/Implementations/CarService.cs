@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using AutoMapper;
     using CarDealer.Data;
     using CarDealer.Data.Models;
     using CarDealer.Services.Models.Cars;
@@ -12,10 +13,12 @@
     public class CarService : ICarService
     {
         private readonly CarDealerDbContext db;
+        private readonly IMapper mapper;
 
-        public CarService(CarDealerDbContext db)
+        public CarService(CarDealerDbContext db, IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
         public IEnumerable<CarModel> AllByMake(string make)
@@ -30,13 +33,7 @@
             return cars
                 .OrderBy(c => c.Model)
                 .ThenByDescending(c => c.TravelledDistance)
-                .Select(c => new CarModel
-                {
-                    Id = c.Id,
-                    Make = c.Make,
-                    Model = c.Model,
-                    TravelledDistance = c.TravelledDistance
-                })
+                .Select(c => this.mapper.Map<CarModel>(c))
                 .ToList();
         }
 
@@ -45,13 +42,7 @@
             .Cars
             .OrderBy(c => c.Make)
             .ThenBy(c => c.Model)
-            .Select(c => new CarModel
-            {
-                Id = c.Id,
-                Make = c.Make,
-                Model = c.Model,
-                TravelledDistance = c.TravelledDistance
-            })
+            .Select(c => this.mapper.Map<CarModel>(c))
             .ToList();
 
         public IEnumerable<CarWithPartsModel> AllWithParts()
@@ -64,12 +55,8 @@
                 Model = c.Model,
                 TravelledDistance = c.TravelledDistance,
                 Parts = c.Parts
-                    .Select(p => new PartModel
-                    {
-                        Name = p.Part.Name,
-                        Price = p.Part.Price
-                    })
-                    .ToList()
+                        .Select(p => this.mapper.Map<PartModel>(p.Part))
+                        .ToList()
             })
             .ToList();
 

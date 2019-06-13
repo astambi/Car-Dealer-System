@@ -1,6 +1,9 @@
 ﻿namespace CarDealer.Services.Models.Suppliers
 {
-    public class SupplierModel
+    using CarDealer.Common.Mapping;
+    using CarDealer.Data.Models;
+
+    public class SupplierModel : IMapFrom<Supplier>
     {
         public int Id { get; set; }
 

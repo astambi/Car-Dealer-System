@@ -55,7 +55,7 @@
                 }
                 else
                 {
-                    <select asp-for="Parts" asp-items="Model.PartsSelectList" class="form-control" size="10"></select>
+                    <select asp-for="Parts" asp-items="Model.PartsSelectList" class="form-control" size="10" disabled></select>
                 }
                 <small>Hold Ctrl to select multiple parts</small>
                 <span asp-validation-for="Parts" class="text-danger"></span>
@@ -67,3 +67,7 @@
 </div>
 
 <a asp-action="@(nameof(CarsController.AllByMake))">Back to List</a>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
