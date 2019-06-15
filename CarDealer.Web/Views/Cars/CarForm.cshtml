@@ -1,11 +1,16 @@
 ﻿@model CarFormModel
 
 @{
-    ViewData["Title"] = "CarForm";
-    const string delete = nameof(CarsController.Delete);
+    ViewData["Title"] = $"{Model.Action} car";
+    var isDeleteDisabled = Model.Action == nameof(CarsController.Delete);
 }
 
 <h1>@Model.Action car</h1>
+
+@if (isDeleteDisabled)
+{
+    <h3>Are you sure you want to delete this car?</h3>
+}
 
 <div class="row justify-content-start">
     <div class="col-md-6">
@@ -13,50 +18,22 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Make" class="control-label"></label>
-                @if (Model.Action != delete)
-                {
-                    <input asp-for="Make" class="form-control" required />
-                }
-                else
-                {
-                    <input asp-for="Make" class="form-control" readonly />
-                }
+                <input asp-for="Make" class="form-control" required disabled="@isDeleteDisabled" />
                 <span asp-validation-for="Make" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Model" class="control-label"></label>
-                @if (Model.Action != delete)
-                {
-                    <input asp-for="Model" class="form-control" required />
-                }
-                else
-                {
-                    <input asp-for="Model" class="form-control" readonly />
-                }
+                <input asp-for="Model" class="form-control" required disabled="@isDeleteDisabled" />
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TravelledDistance" class="control-label"></label>
-                @if (Model.Action != delete)
-                {
-                    <input asp-for="TravelledDistance" class="form-control" min="0" />
-                }
-                else
-                {
-                    <input asp-for="TravelledDistance" class="form-control" readonly />
-                }
+                <input asp-for="TravelledDistance" class="form-control" min="0" disabled="@isDeleteDisabled" />
                 <span asp-validation-for="TravelledDistance" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Parts" class="control-label"></label>
-                @if (Model.Action != delete)
-                {
-                    <select asp-for="Parts" asp-items="Model.PartsSelectList" class="form-control" size="10" required></select>
-                }
-                else
-                {
-                    <select asp-for="Parts" asp-items="Model.PartsSelectList" class="form-control" size="10" disabled></select>
-                }
+                <select asp-for="Parts" asp-items="Model.PartsSelectList" class="form-control" size="10" required disabled="@isDeleteDisabled"></select>
                 <small>Hold Ctrl to select multiple parts</small>
                 <span asp-validation-for="Parts" class="text-danger"></span>
             </div>
@@ -66,8 +43,6 @@
     </div>
 </div>
 
-<a asp-action="@(nameof(CarsController.AllByMake))">Back to List</a>
+<a asp-action="@(nameof(CarsController.AllByMake))">Back to Cars</a>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

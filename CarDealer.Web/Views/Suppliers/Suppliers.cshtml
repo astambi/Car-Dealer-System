@@ -2,18 +2,20 @@
 
 @{
     ViewData["Title"] = "Suppliers";
-    const string create = nameof(SuppliersController.Create);
-    const string delete = nameof(SuppliersController.Delete);
-    const string edit = nameof(SuppliersController.Edit);
+    const string Create = nameof(SuppliersController.Create);
+    const string Delete = nameof(SuppliersController.Delete);
+    const string Edit = nameof(SuppliersController.Edit);
+    var cssCreate = CssHelpers.GetColor(Create);
+    var cssDelete = CssHelpers.GetColor(Delete);
+    var cssEdit = CssHelpers.GetColor(Edit);
 }
-
 
 <header class="d-flex flex-wrap justify-content-between align-items-center">
     <h1>Suppliers @Model.Type </h1>
 
     @if (User.Identity.IsAuthenticated)
     {
-        <a asp-action=@create class="btn btn-@CssHelpers.GetColor(create)">Add supplier</a>
+        <a asp-action=@Create class="btn btn-@cssCreate">Add supplier</a>
     }
 </header>
 
@@ -40,8 +42,8 @@ else
                     <td>@supplier.Name</td>
                     <td>@supplier.TotalParts</td>
                     <td>
-                        <a asp-action="@edit" asp-route-id="@supplier.Id" class="btn btn-@CssHelpers.GetColor(edit)">@edit</a>
-                        <a asp-action="@delete" asp-route-id="@supplier.Id" class="btn btn-@CssHelpers.GetColor(delete)">@delete</a>
+                        <a asp-action="@Edit" asp-route-id="@supplier.Id" class="btn btn-@cssEdit">@Edit</a>
+                        <a asp-action="@Delete" asp-route-id="@supplier.Id" class="btn btn-@cssDelete">@Delete</a>
                     </td>
                 </tr>
             }

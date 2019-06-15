@@ -2,13 +2,13 @@
 
 @{
     ViewData["Title"] = $"{Model.Action} customer";
-    const string create = nameof(CustomersController.Create);
-    const string delete = nameof(CustomersController.Delete);
+    var isDeleteDisabled = Model.Action == nameof(CustomersController.Delete);
+    var isEditDisabled = Model.Action == nameof(CustomersController.Edit);
 }
 
 <h1>@Model.Action customer</h1>
 
-@if (Model.Action == delete)
+@if (isDeleteDisabled)
 {
     <h3>Are you sure you want to delete this customer?</h3>
 }
@@ -17,44 +17,19 @@
     <div class="col-md-6">
         <form asp-action=@Model.Action method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                @if (Model.Action != delete)
-                {
-                    <input asp-for="Name" class="form-control" required />
-                }
-                else
-                {
-                    <input asp-for="Name" class="form-control" readonly />
-                }
+                <input asp-for="Name" class="form-control" required disabled="@isDeleteDisabled" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <label asp-for="BirthDate" class="control-label"></label>
-                @if (Model.Action != delete)
-                {
-                    <input asp-for="BirthDate" class="form-control" required />
-                }
-                else
-                {
-                    <input asp-for="BirthDate" class="form-control" readonly />
-                }
+                <input asp-for="BirthDate" class="form-control" required disabled="@isDeleteDisabled" />
                 <span asp-validation-for="BirthDate" class="text-danger"></span>
             </div>
-
             <div class="form-group form-check">
                 <label asp-for="IsYoungDriver" class="form-check-label">
-                    @if (Model.Action == create)
-                    {
-                        <input class="form-check-input" asp-for="IsYoungDriver" />
-                    }
-                    else
-                    {
-                        // No editting
-                        <input class="form-check-input" asp-for="IsYoungDriver" disabled />
-                    }
+                    <input class="form-check-input" asp-for="IsYoungDriver" disabled="@(isDeleteDisabled || isEditDisabled)" />
                     @Html.DisplayNameFor(model => model.IsYoungDriver)
                 </label>
                 <span asp-validation-for="IsYoungDriver" class="text-danger"></span>
@@ -65,4 +40,6 @@
     </div>
 </div>
 
-<a asp-action="@(nameof(CustomersController.All))">Back to List</a>
+<a asp-action="@(nameof(CustomersController.All))">Back to Customers</a>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

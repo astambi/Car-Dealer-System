@@ -1,11 +1,16 @@
 ﻿@model SupplierFormModel
 
 @{
-    ViewData["Title"] = "Supplier Form";
-    const string delete = nameof(SuppliersController.Delete);
+    ViewData["Title"] = $"{Model.Action} supplier";
+    var isDeleteDisabled = Model.Action == nameof(SuppliersController.Delete);
 }
 
 <h1>@Model.Action supplier</h1>
+
+@if (isDeleteDisabled)
+{
+    <h3>Are you sure you want to delete this supplier?</h3>
+}
 
 <div class="row justify-content-start">
     <div class="col-md-6">
@@ -13,26 +18,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                @if (Model.Action != delete)
-                {
-                    <input asp-for="Name" class="form-control" required />
-                }
-                else
-                {
-                    <input asp-for="Name" class="form-control" readonly />
-                }
+                <input asp-for="Name" class="form-control" required disabled="@isDeleteDisabled" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label asp-for="IsImporter" class="form-check-label">
-                    @if (Model.Action != delete)
-                    {
-                        <input asp-for="IsImporter" class="form-check-input" />
-                    }
-                    else
-                    {
-                        <input asp-for="IsImporter" class="form-check-input" disabled />
-                    }
+                    <input asp-for="IsImporter" class="form-check-input" disabled="@isDeleteDisabled" />
                     @Html.DisplayNameFor(model => model.IsImporter)
                 </label>
                 <span asp-validation-for="IsImporter" class="text-danger"></span>
@@ -43,4 +34,6 @@
     </div>
 </div>
 
-<a asp-action="@(nameof(SuppliersController.Importers))">Back to List</a>
+<a asp-action="@(nameof(SuppliersController.All))">Back to Suppliers</a>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

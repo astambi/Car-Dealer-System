@@ -2,13 +2,13 @@
 
 @{
     ViewData["Title"] = $"{Model.Action} part";
-    const string create = nameof(PartsController.Create);
-    const string delete = nameof(PartsController.Delete);
+    var isDeleteDisabled = Model.Action == nameof(PartsController.Delete);
+    var isEditDisabled = Model.Action == nameof(PartsController.Edit);
 }
 
 <h1>@Model.Action part</h1>
 
-@if (Model.Action == delete)
+@if (isDeleteDisabled)
 {
     <h3>Are you sure you want to delete this part?</h3>
 }
@@ -19,55 +19,40 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                @if (Model.Action == create)
+                <input asp-for="Name" class="form-control" required maxlength="100" disabled="@(isDeleteDisabled || isEditDisabled)" />
+                @if (isEditDisabled)
                 {
-                    <input asp-for="Name" class="form-control" required maxlength="100" />
-                }
-                else
-                {
-                    // No editing
-                    <input asp-for="Name" class="form-control" readonly />
+                    <input asp-for="Name" hidden />
                 }
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
-                @if (Model.Action != delete)
-                {
-                    <input asp-for="Price" class="form-control" type="number" required min="0.00" step="0.01" />
-                }
-                else
-                {
-                    <input asp-for="Price" class="form-control" readonly />
-                }
+                <input asp-for="Price" class="form-control" type="number" required min="0.00" step="0.01" disabled="@isDeleteDisabled" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Quantity" class="control-label"></label>
-                @if (Model.Action != delete)
-                {
-                    <input asp-for="Quantity" class="form-control" required min="1" step="1" />
-                }
-                else
-                {
-                    <input asp-for="Quantity" class="form-control" readonly />
-                }
+                <input asp-for="Quantity" class="form-control" required min="1" step="1" disabled="@isDeleteDisabled" />
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
-            @if (Model.Action == create)
-            {
-                <div class="form-group">
-                    <label asp-for="SupplierId" class="control-label"></label>
-                    <select asp-for="SupplierId" asp-items="Model.Suppliers" class="form-control" required>
-                        <option value="" selected disabled>Choose...</option>
-                    </select>
-                    <span asp-validation-for="SupplierId" class="text-danger"></span>
-                </div>
-            }
+            <div class="form-group">
+                <label asp-for="SupplierId" class="control-label"></label>
+                <select asp-for="SupplierId" asp-items="Model.Suppliers" class="form-control" required disabled="@(isDeleteDisabled || isEditDisabled)">
+                    <option value="" selected disabled>Choose...</option>
+                </select>
+                @if (isEditDisabled)
+                {
+                    <input asp-for="SupplierId" hidden />
+                }
+                <span asp-validation-for="SupplierId" class="text-danger"></span>
+            </div>
 
             <partial name="../Shared/_FormSubmitPartial" model="Model.Action" />
         </form>
     </div>
 </div>
 
-<a asp-action="@(nameof(PartsController.Index))">Back to List</a>
+<a asp-action="@(nameof(PartsController.Index))">Back to Parts</a>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
