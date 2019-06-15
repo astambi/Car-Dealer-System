@@ -1,23 +1,28 @@
 ﻿namespace CarDealer.Web.Controllers
 {
+    using AutoMapper;
     using CarDealer.Services;
     using CarDealer.Web.Infrastructure.Filters;
     using CarDealer.Web.Models.Suppliers;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class SuppliersController : Controller
     {
         private const string SuppliersView = "Suppliers";
         private const string SupplierFormView = "SupplierForm";
 
         private readonly ISupplierService supplierService;
+        private readonly IMapper mapper;
 
-        public SuppliersController(ISupplierService supplierService)
+        public SuppliersController(ISupplierService supplierService, IMapper mapper)
         {
             this.supplierService = supplierService;
+            this.mapper = mapper;
         }
 
+        [AllowAnonymous]
         [Route(WebConstants.SuppliersControllerName)]
         public IActionResult All()
         {
@@ -30,23 +35,23 @@
             return this.View(SuppliersView, model);
         }
 
+        [AllowAnonymous]
         public IActionResult Local()
         {
             var model = this.GetByType(nameof(Local));
             return this.View(SuppliersView, model);
         }
 
+        [AllowAnonymous]
         public IActionResult Importers()
         {
             var model = this.GetByType(nameof(Importers));
             return this.View(SuppliersView, model);
         }
 
-        [Authorize]
-        public IActionResult Create()
+        public IActionResult Create() 
             => this.View(SupplierFormView, new SupplierFormModel());
 
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Create(SupplierFormModel model)
@@ -61,27 +66,9 @@
             return this.RedirectToAction(model.IsImporter ? nameof(Importers) : nameof(Local));
         }
 
-        [Authorize]
-        public IActionResult Delete(int id)
-        {
-            if (!this.supplierService.Exists(id))
-            {
-                return this.RedirectToAction(nameof(All));
-            }
+        public IActionResult Delete(int id) 
+            => this.LoadEditDeleteForm(id, nameof(Delete));
 
-            var supplier = this.supplierService.GetById(id);
-
-            var model = new SupplierFormModel
-            {
-                Action = nameof(Delete),
-                Name = supplier.Name,
-                IsImporter = supplier.IsImporter
-            };
-
-            return this.View(SupplierFormView, model);
-        }
-
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Delete(int id, SupplierFormModel model)
@@ -96,27 +83,9 @@
             return this.RedirectToAction(model.IsImporter ? nameof(Importers) : nameof(Local));
         }
 
-        [Authorize]
-        public IActionResult Edit(int id)
-        {
-            if (!this.supplierService.Exists(id))
-            {
-                return this.RedirectToAction(nameof(All));
-            }
+        public IActionResult Edit(int id) 
+            => this.LoadEditDeleteForm(id, nameof(Edit));
 
-            var supplier = this.supplierService.GetById(id);
-
-            var model = new SupplierFormModel
-            {
-                Action = nameof(Edit),
-                Name = supplier.Name,
-                IsImporter = supplier.IsImporter
-            };
-
-            return this.View(SupplierFormView, model);
-        }
-
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Edit(int id, SupplierFormModel model)
@@ -137,14 +106,25 @@
         }
 
         private SuppliersByTypeModel GetByType(string type)
-        {
-            var suppliers = this.supplierService.AllByType(type == nameof(Importers));
-
-            return new SuppliersByTypeModel
+            => new SuppliersByTypeModel
             {
                 Type = type,
-                Suppliers = suppliers
+                Suppliers = this.supplierService.AllByType(type == nameof(Importers))
             };
+
+        private IActionResult LoadEditDeleteForm(int id, string action)
+        {
+            if (!this.supplierService.Exists(id))
+            {
+                return this.RedirectToAction(nameof(All));
+            }
+
+            var supplier = this.supplierService.GetById(id);
+
+            var model = this.mapper.Map<SupplierFormModel>(supplier);
+            model.Action = action;
+
+            return this.View(SupplierFormView, model);
         }
     }
 }

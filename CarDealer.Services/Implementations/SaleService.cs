@@ -17,42 +17,23 @@
         }
 
         public IEnumerable<SaleModel> All()
-        {
-            var salesAsQuerable = this.db.Sales.AsQueryable();
-            return this.MapToSaleModel(salesAsQuerable);
-        }
+            => this.SalesAsQuerable()
+            .OrderByDescending(s => s.Id)
+            .ToList();
 
         public IEnumerable<SaleModel> AllDiscounted(int? discount)
         {
-            var salesAsQuerable =
-                discount == null
-                ? this.db.Sales
-                    .Where(s => s.Discount != 0) // any discount
-                    .AsQueryable()
-                : this.db.Sales
-                    //.Where(s => this.CalcTotalDiscount(s.Discount, s.Customer.IsYoungDriver) * 100 == discount)
-                    .Where(s => Math.Abs(s.Discount * 100) == discount) // total discount, incl. young driver
-                    .AsQueryable();
+            var salesAsQuerable = discount == null
+                ? this.SalesAsQuerable().Where(s => s.Discount != 0).AsQueryable()
+                : this.SalesAsQuerable().Where(s => Math.Abs(s.Discount * 100) == discount).AsQueryable();
 
-            return this.MapToSaleModel(salesAsQuerable);
+            return salesAsQuerable
+                .OrderByDescending(s => s.Id)
+                .ToList();
         }
 
         public SaleModel ById(int id)
-            => this.db
-            .Sales
-            .Where(s => s.Id == id)
-            .Select(s => new SaleModel
-            {
-                Make = s.Car.Make,
-                Model = s.Car.Model,
-                TravelledDistance = s.Car.TravelledDistance,
-                Customer = s.Customer.Name,
-                Price = s.Car.Parts.Sum(p => p.Part.Price),
-                //Discount = this.CalcTotalDiscount(s.Discount, s.Customer.IsYoungDriver),
-                Discount = s.Discount, // total discount, incl. young driver
-                Id = s.Id
-            })
-            .FirstOrDefault();
+            => this.SalesAsQuerable().FirstOrDefault(s => s.Id == id);
 
         public void Create(int customerId, int carId, double discount) // [0, 100]
         {
@@ -67,23 +48,19 @@
             this.db.SaveChanges();
         }
 
-        private IEnumerable<SaleModel> MapToSaleModel(IQueryable<Sale> salesAsQuerable)
-            => salesAsQuerable
-            .OrderByDescending(s => s.Id)
+        private IQueryable<SaleModel> SalesAsQuerable()
+            => this.db
+            .Sales
             .Select(s => new SaleModel
             {
+                Id = s.Id,
+                Discount = s.Discount, // total discount, incl. young driver
+                Customer = s.Customer.Name,
                 Make = s.Car.Make,
                 Model = s.Car.Model,
                 TravelledDistance = s.Car.TravelledDistance,
-                Customer = s.Customer.Name,
-                Price = s.Car.Parts.Sum(p => p.Part.Price),
-                //Discount = this.CalcTotalDiscount(s.Discount, s.Customer.IsYoungDriver),
-                Discount = s.Discount, // total discount, incl. young driver
-                Id = s.Id
+                Price = s.Car.Parts.Sum(p => p.Part.Price)
             })
-            .ToList();
-
-        private double CalcTotalDiscount(double discount, bool isYoungDriver)
-            => Math.Min(1, discount + (isYoungDriver ? ServicesConstants.YoungDriverDiscount : 0));
+            .AsQueryable();
     }
 }

@@ -10,6 +10,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
+    [Authorize]
     public class SalesController : Controller
     {
         private const string AllView = "all";
@@ -28,6 +29,7 @@
             this.saleService = saleService;
         }
 
+        [AllowAnonymous]
         [Route("sales")]
         public IActionResult All()
         {
@@ -35,6 +37,7 @@
             return this.View(sales);
         }
 
+        [AllowAnonymous]
         [Route("sales/{id}")]
         public IActionResult Details(int id)
         {
@@ -42,6 +45,7 @@
             return this.ViewOrRedirect(sales);
         }
 
+        [AllowAnonymous]
         [Route("sales/discounted/{discount?}")]
         public IActionResult Discounted(int? discount) // in percentage
         {
@@ -49,7 +53,6 @@
             return this.View(AllView, sales);
         }
 
-        [Authorize]
         public IActionResult Create()
         {
             var model = new SaleFormModel
@@ -61,7 +64,6 @@
             return this.View(model);
         }
 
-        [Authorize]
         [HttpPost]
         public IActionResult ReviewCreate(SaleFormModel model)
         {
@@ -99,7 +101,6 @@
             return this.View(reviewModel);
         }
 
-        [Authorize]
         [HttpPost]
         [Log(actionName: "create")]
         public IActionResult FinalizeCreate(SaleReviewModel model)

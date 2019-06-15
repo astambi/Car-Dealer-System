@@ -1,6 +1,5 @@
 ﻿namespace CarDealer.Web.Controllers
 {
-    using System;
     using CarDealer.Services;
     using CarDealer.Web.Infrastructure.Helpers;
     using CarDealer.Web.Models;
@@ -8,6 +7,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class LogsController : Controller
     {
         private readonly ILogService logService;
@@ -17,7 +17,6 @@
             this.logService = logService;
         }
 
-        [Authorize]
         public IActionResult All(string search = null, int currentPage = 1)
         {
             var logsTotal = this.logService.Total(search);
@@ -43,7 +42,6 @@
             return this.View(model);
         }
 
-        [Authorize]
         public IActionResult Clear()
         {
             this.logService.Clear();

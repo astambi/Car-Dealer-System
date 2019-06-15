@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using AutoMapper;
     using CarDealer.Services;
     using CarDealer.Web.Infrastructure.Filters;
     using CarDealer.Web.Infrastructure.Helpers;
@@ -12,20 +13,27 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
+    [Authorize]
     public class PartsController : Controller
     {
         private const string PartFormView = "PartForm";
 
         private readonly IPartService partService;
         private readonly ISupplierService supplierService;
+        private readonly IMapper mapper;
 
-        public PartsController(IPartService partService, ISupplierService supplierService)
+        public PartsController(
+            IPartService partService,
+            ISupplierService supplierService,
+            IMapper mapper)
         {
             this.partService = partService;
             this.supplierService = supplierService;
+            this.mapper = mapper;
         }
 
         // All Parts
+        [AllowAnonymous]
         public IActionResult Index(int currentPage = 1)
         {
             var partsTotal = this.partService.Total();
@@ -50,16 +58,15 @@
             return this.View(model);
         }
 
+        [AllowAnonymous]
         public IActionResult Details(int id) => this.View(); // TODO
 
-        [Authorize]
         public IActionResult Create()
         {
             var model = new PartFormModel { Suppliers = this.GetSuppliersSelectListItems() };
             return this.View(PartFormView, model);
         }
 
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Create(PartFormModel model)
@@ -87,10 +94,9 @@
             }
         }
 
-        [Authorize]
-        public IActionResult Edit(int id) => this.LoadEditDeleteView(id, nameof(Edit));
+        public IActionResult Edit(int id) 
+            => this.LoadEditDeleteView(id, nameof(Edit));
 
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Edit(int id, PartFormModel model)
@@ -116,10 +122,9 @@
             }
         }
 
-        [Authorize]
-        public IActionResult Delete(int id) => this.LoadEditDeleteView(id, nameof(Delete));
+        public IActionResult Delete(int id) 
+            => this.LoadEditDeleteView(id, nameof(Delete));
 
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Delete(int id, PartFormModel model)
@@ -157,13 +162,9 @@
                 return this.RedirectToAction(nameof(Index));
             }
 
-            var model = new PartFormModel
-            {
-                Action = action,
-                Name = part.Name,
-                Price = part.Price,
-                Quantity = part.Quantity
-            };
+            var model = this.mapper.Map<PartFormModel>(part);
+            model.Action = action;
+            model.Suppliers = this.GetSuppliersSelectListItems(); // cannot edit, display only
 
             return this.View(PartFormView, model);
         }

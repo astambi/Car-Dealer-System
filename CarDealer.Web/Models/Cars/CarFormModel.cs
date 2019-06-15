@@ -2,10 +2,13 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using AutoMapper;
+    using CarDealer.Common.Mapping;
+    using CarDealer.Services.Models.Cars;
     using CarDealer.Web.Controllers;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class CarFormModel
+    public class CarFormModel : IMapFrom<CarEditModel>
     {
         [Required]
         [MaxLength(50)]
@@ -20,9 +23,12 @@
         public long TravelledDistance { get; set; }
 
         public IEnumerable<int> Parts { get; set; } = new List<int>();
+
+        [IgnoreMap]
         public IEnumerable<SelectListItem> PartsSelectList { get; set; }
 
         // Create, Delete, Edit
+        [IgnoreMap]
         public string Action { get; set; } = nameof(CarsController.Create); // default action
     }
 }

@@ -2,10 +2,13 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using AutoMapper;
+    using CarDealer.Common.Mapping;
+    using CarDealer.Services.Models.Parts;
     using CarDealer.Web.Controllers;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class PartFormModel
+    public class PartFormModel : IMapFrom<PartEditDeleteModel>
     {
         [Required]
         [MaxLength(100, ErrorMessage = "Name cannot exceed 100 symbols.")]
@@ -19,9 +22,12 @@
 
         [Display(Name = "Supplier")]
         public int SupplierId { get; set; }
+
+        [IgnoreMap]
         public IEnumerable<SelectListItem> Suppliers { get; set; }
 
         // Create, Delete, Edit
+        [IgnoreMap]
         public string Action { get; set; } = nameof(PartsController.Create); // default action
     }
 }

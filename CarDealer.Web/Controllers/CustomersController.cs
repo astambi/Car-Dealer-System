@@ -1,6 +1,7 @@
 ﻿namespace CarDealer.Web.Controllers
 {
     using System;
+    using AutoMapper;
     using CarDealer.Services;
     using CarDealer.Services.Models;
     using CarDealer.Web.Infrastructure.Extensions;
@@ -9,17 +10,21 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class CustomersController : Controller
     {
         private const string CustomerFormView = "CustomerForm";
 
         private readonly ICustomerService customerService;
+        private readonly IMapper mapper;
 
-        public CustomersController(ICustomerService customerService)
+        public CustomersController(ICustomerService customerService, IMapper mapper)
         {
             this.customerService = customerService;
+            this.mapper = mapper;
         }
 
+        [AllowAnonymous]
         public IActionResult All(string order)
         {
             var orderDirection =
@@ -39,6 +44,7 @@
             return this.View(model);
         }
 
+        [AllowAnonymous]
         [Route(WebConstants.CustomersControllerName + "/{id}")]
         public IActionResult TotalSales(int id)
         {
@@ -46,7 +52,6 @@
             return this.ViewOrRedirect(totalSales);
         }
 
-        [Authorize]
         public IActionResult Create()
             => this.View(CustomerFormView,
                 new CustomerFormModel
@@ -55,7 +60,6 @@
                     BirthDate = DateTime.Now // to avoid incorrect date initialisation
                 });
 
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Create(CustomerFormModel model)
@@ -76,11 +80,9 @@
             }
         }
 
-        [Authorize]
         public IActionResult Edit(int id)
             => this.LoadEditDeleteView(id, nameof(Edit));
 
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Edit(int id, CustomerFormModel model)
@@ -106,11 +108,9 @@
             }
         }
 
-        [Authorize]
         public IActionResult Delete(int id)
             => this.LoadEditDeleteView(id, nameof(Delete));
 
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Delete(int id, CustomerFormModel model)
@@ -139,13 +139,8 @@
                 return this.RedirectToAction(nameof(All));
             }
 
-            var model = new CustomerFormModel
-            {
-                Action = action,
-                Name = customer.Name,
-                BirthDate = customer.BirthDate,
-                IsYoungDriver = customer.IsYoungDriver
-            };
+            var model = this.mapper.Map<CustomerFormModel>(customer);
+            model.Action = action;
 
             return this.View(CustomerFormView, model);
         }

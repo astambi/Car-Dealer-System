@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using AutoMapper;
     using CarDealer.Services;
     using CarDealer.Services.Models.Parts;
     using CarDealer.Web.Infrastructure.Extensions;
@@ -12,6 +13,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
+    [Authorize]
     public class CarsController : Controller
     {
         private const string All = "all";
@@ -19,13 +21,19 @@
 
         private readonly ICarService carService;
         private readonly IPartService partService;
+        private readonly IMapper mapper;
 
-        public CarsController(ICarService carService, IPartService partService)
+        public CarsController(
+            ICarService carService,
+            IPartService partService,
+            IMapper mapper)
         {
             this.carService = carService;
             this.partService = partService;
+            this.mapper = mapper;
         }
 
+        [AllowAnonymous]
         [Route(WebConstants.CarsControllerName + "/{make?}")]
         public IActionResult AllByMake(string make)
         {
@@ -40,12 +48,10 @@
             return this.View(model);
         }
 
-        [Authorize]
         public IActionResult Create()
             => this.View(CarFormView,
                 new CarFormModel { PartsSelectList = this.GetPartsSelectListItems(true) });
 
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Create(CarFormModel carModel)
@@ -73,11 +79,9 @@
             }
         }
 
-        [Authorize]
         public IActionResult Edit(int id)
             => this.LoadEditDeleteView(id, nameof(Edit));
 
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Edit(int id, CarFormModel carModel)
@@ -95,7 +99,12 @@
 
             try
             {
-                this.carService.Update(id, carModel.Make, carModel.Model, carModel.TravelledDistance, carModel.Parts);
+                this.carService.Update(
+                    id,
+                    carModel.Make,
+                    carModel.Model,
+                    carModel.TravelledDistance,
+                    carModel.Parts);
 
                 return this.RedirectToAction(nameof(AllByMake));
             }
@@ -106,11 +115,9 @@
             }
         }
 
-        [Authorize]
         public IActionResult Delete(int id)
             => this.LoadEditDeleteView(id, nameof(Delete));
 
-        [Authorize]
         [HttpPost]
         [Log]
         public IActionResult Delete(int id, CarFormModel carModel)
@@ -131,6 +138,7 @@
             }
         }
 
+        [AllowAnonymous]
         public IActionResult Parts()
         {
             var cars = this.carService.AllWithParts();
@@ -155,15 +163,9 @@
                 return this.RedirectToAction(nameof(AllByMake));
             }
 
-            var carModel = new CarFormModel
-            {
-                Action = action,
-                Make = car.Make,
-                Model = car.Model,
-                TravelledDistance = car.TravelledDistance,
-                Parts = car.Parts,
-                PartsSelectList = this.GetPartsSelectListItems()
-            };
+            var carModel = this.mapper.Map<CarFormModel>(car);
+            carModel.Action = action;
+            carModel.PartsSelectList = this.GetPartsSelectListItems();
 
             return this.View(CarFormView, carModel);
         }
